@@ -1,0 +1,42 @@
+## ─────────────────────────────────────────────
+## .gitignore — AutoPrime Motors
+## ─────────────────────────────────────────────
+
+# ──── .NET ────
+bin/
+obj/
+*.user
+*.suo
+.vs/
+*.log
+*.swp
+publish/
+
+# Arquivos de ambiente sensíveis
+appsettings.Production.json
+*.pfx
+*.p12
+
+# ──── Node / React ────
+node_modules/
+dist/
+build/
+.env
+.env.local
+.env.production
+
+# ──── Docker ────
+.docker/
+
+# ──── Sistema operacional ────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ──── IDEs ────
+.vscode/
+.idea/
+*.code-workspace
+
+# ──── Dados locais ────
+/data/
