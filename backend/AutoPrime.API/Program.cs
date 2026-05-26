@@ -1,5 +1,6 @@
 using AutoPrime.API.Configurations;
 using MongoDB.Driver;
+using AutoPrime.API.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,24 +28,33 @@ builder.Services.AddSingleton<IMongoDatabase>(sp =>
     return client.GetDatabase(settings.DatabaseName);
 });
 
+// 2. REPOSITÓRIOS (Scoped — uma instância por requisição)
+// Por que Scoped e não Singleton?
+// Cada requisição HTTP tem seu próprio ciclo de vida.
+// Scoped garante isolamento entre requisições concorrentes.
+// ─────────────────────────────────────────────
+builder.Services.AddScoped<IVeiculoRepository, VeiculoRepository>();
+builder.Services.AddScoped<IClienteRepository, ClienteRepository>();
+builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+builder.Services.AddScoped<IVendaRepository, VendaRepository>();
 
-// 2. CONTROLLERS E SERIALIZAÇÃO JSON
+// 3. CONTROLLERS E SERIALIZAÇÃO JSON
 // ─────────────────────────────────────────────
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
-     
+
         options.JsonSerializerOptions.PropertyNamingPolicy =
             System.Text.Json.JsonNamingPolicy.CamelCase;
     });
 
 
-// 3. SWAGGER
+// 4. SWAGGER
 // ─────────────────────────────────────────────
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerConfiguration();
 
-// 4. CORS
+// 5. CORS
 // ─────────────────────────────────────────────
 builder.Services.AddCors(options =>
 {
@@ -52,8 +62,8 @@ builder.Services.AddCors(options =>
     {
         policy
             .WithOrigins(
-                "http://localhost:3000", 
-                "http://localhost:5173"   
+                "http://localhost:3000",
+                "http://localhost:5173"
             )
             .AllowAnyHeader()
             .AllowAnyMethod();
